@@ -6,6 +6,9 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const REGISTER = 'REGISTER';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_ERROR = 'REGISTER_ERROR';
+export const GET_LOGGED_IN_USER = 'GET_LOGGED_IN_USER';
+export const GET_LOGGED_IN_USER_SUCCESS = 'GET_LOGGED_IN_USER_SUCCESS';
+export const GET_LOGGED_IN_USER_ERROR = 'GET_LOGGED_IN_USER_ERROR';
 
 export interface User {
   username: string;
@@ -64,10 +67,27 @@ export interface RegisterErrorAction {
   error: ApiError,
 }
 
+export interface GetLoggedInUserAction {
+  type: typeof GET_LOGGED_IN_USER,
+}
+
+export interface GetLoggedInUserSuccessAction {
+  type: typeof GET_LOGGED_IN_USER_SUCCESS,
+  user: User,
+}
+
+export interface GetLoggedInUserErrorAction {
+  type: typeof GET_LOGGED_IN_USER_ERROR,
+  error: ApiError,
+}
+
 export type AuthActionTypes =
   LoginAction
   | LoginSuccessAction
   | LoginErrorAction
   | RegisterAction
   | RegisterSuccessAction
-  | RegisterErrorAction;
+  | RegisterErrorAction
+  | GetLoggedInUserAction
+  | GetLoggedInUserSuccessAction
+  | GetLoggedInUserErrorAction;

@@ -1,4 +1,10 @@
 import {
+  GET_LOGGED_IN_USER,
+  GET_LOGGED_IN_USER_ERROR,
+  GET_LOGGED_IN_USER_SUCCESS,
+  GetLoggedInUserAction,
+  GetLoggedInUserErrorAction,
+  GetLoggedInUserSuccessAction,
   LOGIN,
   LOGIN_ERROR,
   LOGIN_SUCCESS,
@@ -15,7 +21,7 @@ import {
   RegisterUserPayload,
   User
 } from './types';
-import { ApiError } from '../../repositories/api.service';
+import {ApiError} from '../../repositories/api.service';
 
 export function login(user: LoginUserPayload): LoginAction {
   return {
@@ -55,6 +61,26 @@ export function registerSuccess(user: User): RegisterSuccessAction {
 export function registerError(error: ApiError): RegisterErrorAction {
   return {
     type: REGISTER_ERROR,
+    error,
+  }
+}
+
+export function getLoggedInUser(): GetLoggedInUserAction {
+  return {
+    type: GET_LOGGED_IN_USER,
+  }
+}
+
+export function getLoggedInUserSuccess(user: User): GetLoggedInUserSuccessAction {
+  return {
+    type: GET_LOGGED_IN_USER_SUCCESS,
+    user,
+  }
+}
+
+export function getLoggedInUserError(error: ApiError): GetLoggedInUserErrorAction {
+  return {
+    type: GET_LOGGED_IN_USER_ERROR,
     error,
   }
 }

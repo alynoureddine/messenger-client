@@ -1,33 +1,46 @@
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Grid } from '@material-ui/core';
-import { FriendList } from './FriendList';
-import { Chat } from './Chat';
-
+import React, {useEffect} from 'react';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {Grid} from '@material-ui/core';
+import {ChatSection} from './chat/Chat';
+import {LeftSection} from './LeftSection';
+import {getFriends} from '../store/friends/actions';
+import {Dispatch} from 'redux';
+import {useDispatch} from 'react-redux';
+import io from "socket.io-client";
+import {store} from '../index';
+import {socketSaga} from '../store/sagas';
 
 export function Home() {
+
+  const dispatch: Dispatch = useDispatch();
+
+  useEffect(() => {
+    const socket: SocketIOClient.Socket = io('http://localhost:8080', {transports: ['websocket']});
+    socket.on('connect', () => {
+      dispatch(getFriends());
+    });
+
+    store.runSaga(socketSaga, socket);
+  }, [dispatch]);
+
   return (
-    <div style={{height: '100%'}}>
-      <Grid container style={{height: '100%'}} >
-        <Grid item  md={3} xs>
-          <BrowserRouter>
+    <BrowserRouter>
+      <div style={{height: '100%'}}>
+        <Grid container style={{height: '100%'}}>
+          <Grid item md={3} xs>
             <Switch>
               <Route path="/">
-                <FriendList/>
+                <LeftSection/>
               </Route>
             </Switch>
-          </BrowserRouter>
-        </Grid>
-        <Grid item style={{borderLeft: 'solid 1px', height: '100%'}} xs>
-          <BrowserRouter>
+          </Grid>
+          <Grid item style={{borderLeft: 'solid 1px', height: '100%'}} xs>
             <Switch>
-              <Route path="/chat">
-                <Chat/>
-              </Route>
+              <Route path="/:id" children={<ChatSection/>}/>
             </Switch>
-          </BrowserRouter>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
+      </div>
+    </BrowserRouter>
   )
 }

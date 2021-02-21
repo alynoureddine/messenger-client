@@ -1,4 +1,16 @@
-import { AuthActionTypes, AuthState, REGISTER, REGISTER_ERROR, REGISTER_SUCCESS } from './types';
+import {
+  AuthActionTypes,
+  AuthState,
+  GET_LOGGED_IN_USER,
+  GET_LOGGED_IN_USER_ERROR,
+  GET_LOGGED_IN_USER_SUCCESS,
+  LOGIN,
+  LOGIN_ERROR,
+  LOGIN_SUCCESS,
+  REGISTER,
+  REGISTER_ERROR,
+  REGISTER_SUCCESS
+} from './types';
 
 const initialState: AuthState = {
   loggedIn: false,
@@ -9,8 +21,8 @@ const initialState: AuthState = {
     lastName: '',
   },
   error: {
-    message: '',
-    errors: {}
+    message: {},
+    error: ''
   },
   pending: false,
 };
@@ -19,19 +31,54 @@ export function authReducer(state: AuthState = initialState, action: AuthActionT
   switch (action.type) {
     case REGISTER:
       return {
-        ...initialState,
+        ...state,
         pending: true,
       };
     case REGISTER_SUCCESS:
       return {
-        ...initialState,
+        ...state,
         user: action.user,
         loggedIn: true,
       };
     case REGISTER_ERROR:
       return {
+        ...state,
+        error: {
+          ...action.error,
+        },
+      };
+    case LOGIN:
+      return {
+        ...state,
+        pending: true,
+      };
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        user: action.user,
+        loggedIn: true,
+      };
+    case LOGIN_ERROR:
+      return {
+        ...state,
+        error: {
+          ...action.error,
+        },
+      };
+    case GET_LOGGED_IN_USER:
+      return {
+        ...state,
+        pending: true,
+      };
+    case GET_LOGGED_IN_USER_SUCCESS:
+      return {
+        ...state,
+        user: action.user,
+        loggedIn: true,
+      };
+    case GET_LOGGED_IN_USER_ERROR:
+      return {
         ...initialState,
-        error: action.error,
       };
     default: {
       return state;

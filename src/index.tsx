@@ -3,10 +3,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import configureAppStore from './store/configureStore';
+import rootSaga from './store/sagas';
 
-const store = configureAppStore({});
+if (process.env.NODE_ENV === 'development') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  whyDidYouRender(React, {
+    trackAllPureComponents: true,
+  });
+}
+
+export const store = configureAppStore({});
+
+store.runSaga(rootSaga);
 
 ReactDOM.render(
   <React.StrictMode>

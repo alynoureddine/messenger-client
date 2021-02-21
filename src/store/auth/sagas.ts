@@ -1,8 +1,15 @@
 import { call, put, take } from 'redux-saga/effects'
-import { LOGIN, LoginAction, REGISTER, RegisterAction, User } from './types';
+import {GET_LOGGED_IN_USER, LOGIN, LoginAction, REGISTER, RegisterAction, User} from './types';
 import { AuthRepository } from '../../repositories/auth.repository';
 import { ApiError, ApiResponse } from '../../repositories/api.service';
-import { loginError, loginSuccess, registerError, registerSuccess } from './actions';
+import {
+  getLoggedInUserError,
+  getLoggedInUserSuccess,
+  loginError,
+  loginSuccess,
+  registerError,
+  registerSuccess
+} from './actions';
 
 export function* watchLogin() {
   while(true) {
@@ -27,5 +34,19 @@ export function* watchRegister() {
       yield put(registerSuccess(response));
     else
       yield put(registerError(error as ApiError));
+  }
+}
+
+export function* watchGetLoggedInUser() {
+  while(true) {
+    yield take(GET_LOGGED_IN_USER);
+
+    const { response, error }: ApiResponse<User> = yield call(AuthRepository.me);
+
+    if (response)
+      yield put(getLoggedInUserSuccess(response));
+    else
+      yield put(getLoggedInUserError(error as ApiError));
+
   }
 }
