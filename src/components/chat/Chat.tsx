@@ -2,39 +2,38 @@ import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import {Dispatch} from 'redux';
-import {getChat} from '../../store/chats/actions';
+import {createDraftMessage, emitMessage, getChat} from '../../store/chats/actions';
 import {getChatsState} from '../../store/selectors';
-import {Chat, DraftChat} from '../../store/chats/types';
-import ChatFooter from './ChatFooter';
-import Messages from "./Messages";
+import {Chat, DraftChat, Message} from '../../store/chats/types';
+import {ChatView} from "./ChatView";
 
 export function ChatSection() {
   const dispatch: Dispatch = useDispatch();
+  const isChatPending: boolean = useSelector(getChatsState).pending;
   let id: number = +useParams<{id: string}>().id;
+
+  useEffect(() => {
+      if (!isChatPending) dispatch(getChat(id as number));
+  }, [dispatch, id, isChatPending]);
+
   const chat: Chat | undefined = useSelector(getChatsState).list
     .find((chat: Chat) => chat.id === id || (chat as DraftChat).draftId === id);
 
-  useEffect(() => {
-    dispatch(getChat(id));
-  }, [dispatch, id]);
-
   if (!chat) {
-    //todo add loading animation here
-    return <div></div>;
+    return <div></div> //todo add loading animation
   }
 
   const isDraft: boolean = chat.id === (chat as DraftChat).draftId;
 
+  let sendMessageAction: (message: Message) => void = (message: Message) => {
+      if (isDraft) {
+        dispatch(createDraftMessage({ ...message, isDraft: true }, chat.id))
+      } else {
+        dispatch(emitMessage(message, chat.id));
+      }
+  }
+
   return(
-    <div className="chat-wrapper" style={{display: 'flex', flexDirection: 'column', height: '100%'}} id="main">
-      <div style={{height :'100%', position: 'relative'}} className="messages-wrapper">
-        <div className="messages-container" style={{ height: '100%', position: 'absolute', overflow: 'hidden scroll', width: '100%', flexDirection:'column-reverse'}}>
-          <Messages messages={chat.messages ?? []}/>
-        </div>
-      </div>
-      <div className="chat-footer" key={id}>
-        <ChatFooter chatId={chat.id} isDraft={isDraft}/>
-      </div>
-    </div>
+    <ChatView messages={chat.messages} sendMessageAction={sendMessageAction}/>
   )
 }

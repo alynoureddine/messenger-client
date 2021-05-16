@@ -9,8 +9,6 @@ let counter = 0
 export function LeftSection() {
   return (
     <div>
-      <div>{ ++counter }</div>
-
       <CreateChatModal/>
       <AddFriendModal/>
       <FriendRequestsList/>

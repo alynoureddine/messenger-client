@@ -6,6 +6,8 @@ import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux';
 import configureAppStore from './store/configureStore';
 import rootSaga from './store/sagas';
+import {BrowserRouter as Router, Route, Switch, Redirect, useLocation} from 'react-router-dom';
+
 
 if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
@@ -21,7 +23,9 @@ store.runSaga(rootSaga);
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

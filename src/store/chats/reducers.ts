@@ -73,7 +73,7 @@ export function chatsReducer(state: ChatsState = initialState, action: ChatsActi
           ...state,
           list: state.list.map(((chat: Chat) => action.chatId === chat.id ? {
             ...chat,
-            messages: (chat.messages ?? []).concat(action.message)
+            messages: (chat.messages).concat(action.message)
           } : chat))
         };
 
@@ -86,7 +86,7 @@ export function chatsReducer(state: ChatsState = initialState, action: ChatsActi
         ...state,
         list: state.list.map(((chat: Chat) => action.chatId === chat.id ? {
           ...chat,
-          messages: chat.messages?.map((message: Message) => message.id === action.pendingMessageId ? action.message : message)
+          messages: chat.messages.map((message: Message) => message.id === action.pendingMessageId ? action.message : message)
         } : chat))
       };
     case INCOMING_MESSAGE:
@@ -94,7 +94,7 @@ export function chatsReducer(state: ChatsState = initialState, action: ChatsActi
         ...state,
         list: state.list.map(((chat: Chat) => action.message.chat.id === chat.id ? {
           ...chat,
-          messages: (chat.messages ?? []).concat({...action.message, pending: false}),
+          messages: (chat.messages).concat({...action.message, pending: false}),
         } : chat)),
       };
     case CREATE_CHAT:
@@ -121,7 +121,7 @@ export function chatsReducer(state: ChatsState = initialState, action: ChatsActi
         ...state,
         list: state.list.map(((chat: Chat) => action.draftChatId === (chat as DraftChat).draftId ? {
           ...chat,
-          messages: chat.messages?.concat(action.message)
+          messages: chat.messages.concat(action.message)
         } : chat))
       };
     case EMIT_DRAFT_MESSAGE:
@@ -129,7 +129,7 @@ export function chatsReducer(state: ChatsState = initialState, action: ChatsActi
         ...state,
         list: state.list.map(((chat: Chat) => action.chatId === chat.id ? {
           ...chat,
-          messages: chat.messages?.map((message: Message): Message | DraftMessage =>
+          messages: chat.messages.map((message: Message): Message | DraftMessage =>
             (message as DraftMessage).isDraft ? { ...message, isDraft: false } : message
           )
         } : chat))

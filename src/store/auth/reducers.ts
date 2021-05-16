@@ -15,10 +15,13 @@ import {
 const initialState: AuthState = {
   loggedIn: false,
   user: {
+    id: 0,
     email: '',
     username: '',
     firstName: '',
     lastName: '',
+    bio: '',
+    image: ''
   },
   error: {
     message: {},

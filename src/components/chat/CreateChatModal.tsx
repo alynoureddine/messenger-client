@@ -6,11 +6,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {useTheme} from '@material-ui/core/styles';
 import {FriendList} from '../friend/FriendList';
+import {Chat, ChatsState} from "../../store/chats/types";
+import {useHistory} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {getChatsState} from "../../store/selectors";
 
 export default function CreateChatModal() {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const history = useHistory();
+  const chatState: ChatsState = useSelector(getChatsState);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -18,6 +24,22 @@ export default function CreateChatModal() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleFriendClick = (friendId: number) => {
+    handleClose();
+
+    let chat: Chat | undefined = chatState.list.find((chat: Chat) =>
+      (chat.users[0].id === friendId || chat.users[1].id === friendId)
+    );
+
+    if (chat) {
+      history.push(`/chats/${chat.id}`);
+
+      return;
+    }
+
+    history.push(`/chats/new/${friendId}`);
   };
 
   return (
@@ -34,7 +56,7 @@ export default function CreateChatModal() {
         <DialogTitle id="responsive-dialog-title">{"New Chat"}</DialogTitle>
 
         <DialogContent>
-          <FriendList/>
+          <FriendList handleFriendClick={handleFriendClick} />
         </DialogContent>
       </Dialog>
     </div>

@@ -1,16 +1,21 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {Button} from '@material-ui/core'
 import {Field, Form, Formik, FormikValues} from 'formik';
-import {TextField} from 'formik-material-ui';
-import {useDispatch} from 'react-redux';
-import {createDraftMessage, emitMessage} from '../../store/chats/actions';
+import {fieldToTextField, TextFieldProps} from 'formik-material-ui';
 import {store} from '../../index';
 import {Message} from "../../store/chats/types";
+import MuiTextField from '@material-ui/core/TextField';
+import SendIcon from '@material-ui/icons/Send';
 
 const initialValues = {message: ''};
 
-export default function ChatFooter(props: { chatId: number, isDraft: boolean }) {
-  const dispatch = useDispatch();
+
+export default function ChatFooter(props: { sendMessageAction: (message: Message) => void }) {
+  const textInput = useRef<HTMLInputElement>(null);
+
+  const TextField = (props: TextFieldProps) => {
+    return <MuiTextField ref={textInput} {...fieldToTextField(props)} />
+  }
 
   return (
     <div>
@@ -32,19 +37,18 @@ export default function ChatFooter(props: { chatId: number, isDraft: boolean }) 
             pending: true,
           }
 
-          if (props.isDraft) {
-            dispatch(createDraftMessage({...message, isDraft: true }, props.chatId))
-          } else {
-            dispatch(emitMessage(message, props.chatId));
-          }
+          props.sendMessageAction(message);
 
+          if (textInput.current) {
+            textInput.current.focus();
+          }
         }}
       >
         {({submitForm}) => {
           return (
-            <Form>
+            <Form autoComplete="off" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Field component={TextField} name="message" type="text" id="message" margin="normal" fullWidth autoFocus/>
-              <Button variant="contained" color="primary" onClick={submitForm}> Send </Button>
+              <SendIcon onClick={submitForm} style={{cursor: "pointer"}}/>
             </Form>
           )
         }}

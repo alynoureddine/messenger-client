@@ -20,7 +20,7 @@ import {getAuthState} from '../../store/selectors';
 import {AuthState, LoginAction, LoginUserPayload} from '../../store/auth/types';
 import {Dispatch} from 'redux';
 import {FormikHelpers} from 'formik/dist/types';
-import {useHistory} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -46,9 +46,6 @@ export default function Login() {
   const classes = useStyles();
   const dispatch: Dispatch<LoginAction> = useDispatch();
   const authState: AuthState = useSelector(getAuthState);
-  const history = useHistory();
-
-  if (authState.loggedIn) history.push('/');
 
   return (
     <Container component="main" maxWidth="xs">

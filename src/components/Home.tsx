@@ -9,6 +9,8 @@ import {useDispatch} from 'react-redux';
 import io from "socket.io-client";
 import {store} from '../index';
 import {socketSaga} from '../store/sagas';
+import {NewChatSection} from "./chat/NewChatSection";
+import Header from "./Header";
 
 export function Home() {
 
@@ -27,6 +29,9 @@ export function Home() {
     <BrowserRouter>
       <div style={{height: '100%'}}>
         <Grid container style={{height: '100%'}}>
+          <Grid item md={12} xs={12}>
+            <Header />
+          </Grid>
           <Grid item md={3} xs>
             <Switch>
               <Route path="/">
@@ -36,7 +41,10 @@ export function Home() {
           </Grid>
           <Grid item style={{borderLeft: 'solid 1px', height: '100%'}} xs>
             <Switch>
-              <Route path="/:id" children={<ChatSection/>}/>
+              <Route path="/chats/new/:friendId" children={<NewChatSection/>}/>
+            </Switch>
+            <Switch>
+              <Route path="/chats/:id" children={<ChatSection/>}/>
             </Switch>
           </Grid>
         </Grid>

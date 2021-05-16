@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch, Redirect, useLocation} from 'react-router-dom';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import {Home} from './Home';
@@ -21,6 +21,9 @@ import {getLoggedInUser} from "../store/auth/actions";
 function App() {
   const loggedIn: boolean = useSelector(getAuthState).loggedIn;
   const prefersDarkMode: boolean = useMediaQuery('(prefers-color-scheme: dark)');
+  const pathname = useLocation().pathname;
+  const redirectTo = new URLSearchParams(useLocation().search).get('redirectTo');
+
 
   const theme: Theme = createMuiTheme({
     palette: {
@@ -45,21 +48,19 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <div className={classes.App}>
-          <Switch>
-            <Route path="/login">
-              {loggedIn ? <Redirect to="/" /> : <Login />}
-            </Route>
-            <Route path="/register">
-              <Register/>
-            </Route>
-            <Route path="/">
-              {loggedIn ? <Home /> : <Redirect to="/login" />}
-            </Route>
-          </Switch>
-        </div>
-      </Router>
+      <div className={classes.App}>
+        <Switch>
+          <Route path="/login">
+            {loggedIn ? <Redirect to={redirectTo ?? '/'} /> : <Login />}
+          </Route>
+          <Route path="/register">
+            <Register/>
+          </Route>
+          <Route path="/">
+            {loggedIn ? <Home /> : <Redirect to={`/login?redirectTo=${pathname}`} />}
+          </Route>
+        </Switch>
+      </div>
     </ThemeProvider>
   );
 }

@@ -19,7 +19,7 @@ import {
   RegisterErrorAction,
   RegisterSuccessAction,
   RegisterUserPayload,
-  User
+  AuthUser
 } from './types';
 import {ApiError} from '../../repositories/api.service';
 
@@ -30,7 +30,7 @@ export function login(user: LoginUserPayload): LoginAction {
   }
 }
 
-export function loginSuccess(user: User): LoginSuccessAction {
+export function loginSuccess(user: AuthUser): LoginSuccessAction {
   return {
     type: LOGIN_SUCCESS,
     user: user,
@@ -51,7 +51,7 @@ export function register(user: RegisterUserPayload): RegisterAction {
   }
 }
 
-export function registerSuccess(user: User): RegisterSuccessAction {
+export function registerSuccess(user: AuthUser): RegisterSuccessAction {
   return {
     type: REGISTER_SUCCESS,
     user: user,
@@ -71,7 +71,7 @@ export function getLoggedInUser(): GetLoggedInUserAction {
   }
 }
 
-export function getLoggedInUserSuccess(user: User): GetLoggedInUserSuccessAction {
+export function getLoggedInUserSuccess(user: AuthUser): GetLoggedInUserSuccessAction {
   return {
     type: GET_LOGGED_IN_USER_SUCCESS,
     user,

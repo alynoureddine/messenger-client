@@ -50,12 +50,11 @@ export default function AddFriendModal() {
 
         <DialogContent>
           <Autocomplete
-            id="combo-box-demo"
             options={users.map(({username}: { username: string })=> ({username}))}
             getOptionSelected={(option: { username: string }, value: { username: string }) => option.username === value.username}
             getOptionLabel={(option: { username: string }) => option.username}
             style={{ width: 300 }}
-            renderInput={(params: AutocompleteRenderInputParams) => <TextField {...params} label="Combo box" variant="outlined" />}
+            renderInput={(params: AutocompleteRenderInputParams) => <TextField {...params} label="username" variant="outlined" />}
             onInputChange={(_: ChangeEvent<{}>, value: string) => setUsername(value)}
           />
           <Button variant="outlined" color="primary" onClick={() => dispatch(createFriendRequest(username))}>

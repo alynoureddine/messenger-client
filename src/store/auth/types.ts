@@ -1,4 +1,5 @@
 import { ApiError } from '../../repositories/api.service';
+import {User} from "../users/types";
 
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -10,12 +11,7 @@ export const GET_LOGGED_IN_USER = 'GET_LOGGED_IN_USER';
 export const GET_LOGGED_IN_USER_SUCCESS = 'GET_LOGGED_IN_USER_SUCCESS';
 export const GET_LOGGED_IN_USER_ERROR = 'GET_LOGGED_IN_USER_ERROR';
 
-export interface User {
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
+export interface AuthUser extends User {}
 
 export interface LoginUserPayload {
   username: string;
@@ -32,7 +28,7 @@ export interface RegisterUserPayload {
 
 export interface AuthState {
   loggedIn: boolean;
-  user: User;
+  user: AuthUser;
   error: ApiError,
   pending: boolean,
 }
@@ -44,7 +40,7 @@ export interface LoginAction {
 
 export interface LoginSuccessAction {
   type: typeof LOGIN_SUCCESS,
-  user: User,
+  user: AuthUser,
 }
 
 export interface LoginErrorAction {
@@ -59,7 +55,7 @@ export interface RegisterAction {
 
 export interface RegisterSuccessAction {
   type: typeof REGISTER_SUCCESS,
-  user: User,
+  user: AuthUser,
 }
 
 export interface RegisterErrorAction {
@@ -73,7 +69,7 @@ export interface GetLoggedInUserAction {
 
 export interface GetLoggedInUserSuccessAction {
   type: typeof GET_LOGGED_IN_USER_SUCCESS,
-  user: User,
+  user: AuthUser,
 }
 
 export interface GetLoggedInUserErrorAction {

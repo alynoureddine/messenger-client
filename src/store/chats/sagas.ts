@@ -80,7 +80,7 @@ export function* watchGetChatList() {
     const { response, error }: ApiResponse<Chat[]> = yield call(ChatsRepository.getChatList);
 
     if (response)
-      yield put(getChatListSuccess(response));
+      yield put(getChatListSuccess(response.map((chat: Chat) => ({ ...chat, messages: [] }))));
     else
       yield put(getChatListError(error as ApiError));
   }
@@ -93,7 +93,7 @@ export function* watchGetChat() {
     const { response, error }: ApiResponse<Chat> = yield call(ChatsRepository.getChat, action.id);
 
     if (response)
-      yield put(getChatSuccess(response));
+      yield put(getChatSuccess({ ...response }));
     else
       yield put(getChatError(error as ApiError));
   }
@@ -103,13 +103,13 @@ export function* watchCreateChat() {
   while(true) {
     const action: CreateChatAction = yield take(CREATE_CHAT);
 
-    const { response, error }: ApiResponse<Chat> = yield call(ChatsRepository.createChat, action.friendId);
+    const { response, error }: ApiResponse<Chat> = yield call(ChatsRepository.createChat, action.friendId, action.draftChat.messages[0].text);
 
     if (response) {
       yield put(createChatSuccess(response, action.draftChat.draftId));
 
       const draftMessages: DraftMessage[] = store.getState().chats.list
-        .find((chat: Chat) => chat.id === response.id)?.messages?.filter((message: Message) => (message as DraftMessage).isDraft) as DraftMessage[];
+        .find((chat: Chat) => chat.id === response.id)?.messages.filter((message: Message) => (message as DraftMessage).isDraft) as DraftMessage[];
 
       draftMessages?.forEach((draftMessage: DraftMessage): void => {
         store.dispatch(emitDraftMessage(draftMessage, response.id));
@@ -132,11 +132,8 @@ function createEmitMessageSocketChannel(socket: SocketIOClient.Socket, {text, ch
 }
 
 export function* watchEmitMessageEvents(socket: SocketIOClient.Socket) {
-  console.log('bbbbbbbb');
-
   while (true) {
     try {
-      console.log('aaaaaaaaaaa');
       const action: EmitMessageAction = yield take(EMIT_MESSAGE);
       console.timeLog('submit');
       const pendingMessage: Message = action.message;

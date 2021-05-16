@@ -1,7 +1,8 @@
 import {ApiError} from '../../repositories/api.service';
 import {Friend} from '../friends/types';
-import {User} from '../auth/types';
 import {MessageResponse} from '../../common/message-response.interface';
+import {User} from "../users/types";
+import {AuthUser} from "../auth/types";
 
 export const GET_CHAT_LIST = 'GET_CHAT_LIST';
 export const GET_CHAT_LIST_SUCCESS = 'GET_CHAT_LIST_SUCCESS';
@@ -34,8 +35,8 @@ export interface DraftMessage extends Message {
 
 export interface Chat {
   id: number;
-  users: Friend[];
-  messages?: Message[];
+  users: (Friend | AuthUser) [];
+  messages: Message[];
   pending?: boolean;
 }
 
@@ -51,7 +52,6 @@ export interface ChatsState {
   list: Chat[];
   pending: boolean;
   error: ApiError;
-  // newChat?: NewChat | null;
 }
 
 export interface GetChatListAction {

@@ -1,5 +1,5 @@
 import { call, put, take } from 'redux-saga/effects'
-import {GET_LOGGED_IN_USER, LOGIN, LoginAction, REGISTER, RegisterAction, User} from './types';
+import {GET_LOGGED_IN_USER, LOGIN, LoginAction, REGISTER, RegisterAction, AuthUser} from './types';
 import { AuthRepository } from '../../repositories/auth.repository';
 import { ApiError, ApiResponse } from '../../repositories/api.service';
 import {
@@ -15,7 +15,7 @@ export function* watchLogin() {
   while(true) {
     const action: LoginAction = yield take(LOGIN);
 
-    const { response, error }: ApiResponse<User> = yield call(AuthRepository.login, action.user);
+    const { response, error }: ApiResponse<AuthUser> = yield call(AuthRepository.login, action.user);
 
     if (response)
       yield put(loginSuccess(response));
@@ -28,7 +28,7 @@ export function* watchRegister() {
   while(true) {
     const action: RegisterAction = yield take(REGISTER);
 
-    const { response, error }: ApiResponse<User> = yield call(AuthRepository.register, action.user);
+    const { response, error }: ApiResponse<AuthUser> = yield call(AuthRepository.register, action.user);
 
     if (response)
       yield put(registerSuccess(response));
@@ -41,7 +41,7 @@ export function* watchGetLoggedInUser() {
   while(true) {
     yield take(GET_LOGGED_IN_USER);
 
-    const { response, error }: ApiResponse<User> = yield call(AuthRepository.me);
+    const { response, error }: ApiResponse<AuthUser> = yield call(AuthRepository.me);
 
     if (response)
       yield put(getLoggedInUserSuccess(response));

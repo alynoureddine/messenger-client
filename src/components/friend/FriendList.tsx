@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export function FriendList() {
+export function FriendList({ handleFriendClick }: { handleFriendClick: (friendId: number) => void } ) {
   const classes = useStyles();
   const dispatch: Dispatch<GetFriendsAction> = useDispatch();
   const friendsState: FriendsState = useSelector(getFriendsState);
@@ -37,7 +37,7 @@ export function FriendList() {
               </GridListTile>
             : friendsState.friends.map((friend: Friend) =>
               <GridListTile className={classes.item} key={friend.id}>
-                <FriendItem friend={friend}/>
+                <FriendItem friend={friend} handleFriendClick={handleFriendClick} />
               </GridListTile>
             )
       }

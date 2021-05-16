@@ -1,8 +1,8 @@
-import { LoginUserPayload, RegisterUserPayload, User } from '../store/auth/types';
+import { LoginUserPayload, RegisterUserPayload, AuthUser } from '../store/auth/types';
 import { Api, ApiResponse } from './api.service';
 
 export const AuthRepository = {
-  login: (user: LoginUserPayload): Promise<ApiResponse<User>> => Api.post('auth/login', user),
-  register: (user: RegisterUserPayload): Promise<ApiResponse<User>> => Api.post('auth/register', user),
-  me: (): Promise<ApiResponse<User>> => Api.get('auth/me'),
+  login: (user: LoginUserPayload): Promise<ApiResponse<AuthUser>> => Api.post('auth/login', user),
+  register: (user: RegisterUserPayload): Promise<ApiResponse<AuthUser>> => Api.post('auth/register', user),
+  me: (): Promise<ApiResponse<AuthUser>> => Api.get('auth/me'),
 };

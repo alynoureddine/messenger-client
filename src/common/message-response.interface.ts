@@ -1,9 +1,9 @@
-import { User } from '../store/auth/types';
+import { AuthUser } from '../store/auth/types';
 
 export interface MessageResponse {
   id: number
   text: string
   chat: {id: number}
   date: string
-  user: User,
+  user: AuthUser,
 }
